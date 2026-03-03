@@ -18,7 +18,7 @@ let _INITED = false;
 
 let panelEvents: EventEmitter;
 
-function leekCenterView(stockService: StockService, fundServices: FundService) {
+function leekCenterView(stockService: StockService) {
   const panel = ReusedWebviewPanel.create('leekCenterWebview', `韭菜中心`, ViewColumn.One, {
     enableScripts: true,
     retainContextWhenHidden: true,
@@ -31,7 +31,7 @@ function leekCenterView(stockService: StockService, fundServices: FundService) {
   let flashNewsServer: FlashNewsServerInterface | undefined;
   // const transceiver = transceiverFactory(panel.webview); 备用
 
-  setList(panel.webview, panelEvents, stockService, fundServices);
+  setList(panel.webview, panelEvents, stockService);
   setStocksRemind(panel.webview, panelEvents);
   // setDiscussions(panel.webview, panelEvents);
 
@@ -174,7 +174,6 @@ function setList(
   webview: Webview,
   panelEvents: EventEmitter,
   stockService: StockService,
-  fundServices: FundService
 ) {
   const postListFactory = (command: string) => (data: Array<LeekTreeItem>) => {
     webview.postMessage({
@@ -208,15 +207,15 @@ function setList(
   }
 
   const offUpdateStockList = updateStockList(webview, stockService.stockList);
-  const offUpdateFundList = updateFundList(webview, fundServices.fundList);
+  // const offUpdateFundList = updateFundList(webview, fundServices.fundList);
 
   panelEvents.on('pageReady', () => {
     postStockList!(stockService.stockList);
-    postFundList!(fundServices.fundList);
+    // postFundList!(fundServices.fundList);
   });
   panelEvents.on('onDidDispose', () => {
     offUpdateStockList();
-    offUpdateFundList();
+    // offUpdateFundList();
   });
 }
 

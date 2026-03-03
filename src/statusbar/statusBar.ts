@@ -9,13 +9,11 @@ import { events, formatLabelString } from '../shared/utils';
 
 export class StatusBar {
   private stockService: StockService;
-  private fundService: FundService;
   private fundBarItem: StatusBarItem;
   private statusBarList: StatusBarItem[] = [];
   private statusBarItemLabelFormat: string = '';
-  constructor(stockService: StockService, fundService: FundService) {
+  constructor(stockService: StockService) {
     this.stockService = stockService;
-    this.fundService = fundService;
     this.statusBarList = [];
     this.fundBarItem = window.createStatusBarItem(StatusBarAlignment.Left, 3);
     this.refreshStockStatusBar();
@@ -201,23 +199,23 @@ export class StatusBar {
     const icon = this.hideStatusBarIcon ? '' : '🐥';
     this.fundBarItem.text = `${icon}\$(pulse)`;
     this.fundBarItem.color = this.riseColor;
-    this.fundBarItem.tooltip = this.getFundTooltipText();
+    // this.fundBarItem.tooltip = this.getFundTooltipText();
     this.fundBarItem.show();
     return this.fundBarItem;
   }
 
-  private getFundTooltipText() {
-    let fundTemplate = '';
-    for (let fund of this.fundService.fundList.slice(0, 14)) {
-      const detailInfo = fund.info || { percent: '' };
-      fundTemplate += `${
-        detailInfo.percent?.indexOf('-') === 0 ? ' ↓ ' : detailInfo.percent === '0.00' ? '' : ' ↑ '
-      } ${detailInfo.percent}%   「${
-        detailInfo.name
-      }」\n--------------------------------------------\n`;
-    }
-    // tooltip 有限定高度，所以只展示最多14只基金
-    const tips = this.fundService.fundList.length >= 14 ? '（只展示前14只）' : '';
-    return `「基金详情」\n\n ${fundTemplate}${tips}`;
-  }
+  // private getFundTooltipText() {
+  //   let fundTemplate = '';
+  //   for (let fund of this.fundService.fundList.slice(0, 14)) {
+  //     const detailInfo = fund.info || { percent: '' };
+  //     fundTemplate += `${
+  //       detailInfo.percent?.indexOf('-') === 0 ? ' ↓ ' : detailInfo.percent === '0.00' ? '' : ' ↑ '
+  //     } ${detailInfo.percent}%   「${
+  //       detailInfo.name
+  //     }」\n--------------------------------------------\n`;
+  //   }
+  //   // tooltip 有限定高度，所以只展示最多14只基金
+  //   const tips = this.fundService.fundList.length >= 14 ? '（只展示前14只）' : '';
+  //   return `「基金详情」\n\n ${fundTemplate}${tips}`;
+  // }
 }

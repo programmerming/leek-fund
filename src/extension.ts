@@ -70,47 +70,47 @@ export async function activate(context: ExtensionContext) {
     destroy: () => {}
   } as any);
 
-  const fundService = new FundService(context);
+  // const fundService = new FundService(context);
   const stockService = new StockService(context);
-  const binanceService = new BinanceService(context);
-  const forexService = new ForexService(context);
+  // const binanceService = new BinanceService(context);
+  // const forexService = new ForexService(context);
 
-  const nodeFundProvider = new FundProvider(fundService);
+  // const nodeFundProvider = new FundProvider(fundService);
   const nodeStockProvider = new StockProvider(stockService);
-  const binanceProvider = new BinanceProvider(binanceService);
-  const forexProvider = new ForexProvider(forexService);
-  const newsProvider = new NewsProvider();
+  // const binanceProvider = new BinanceProvider(binanceService);
+  // const forexProvider = new ForexProvider(forexService);
+  // const newsProvider = new NewsProvider();
 
-  const statusBar = new StatusBar(stockService, fundService);
+  const statusBar = new StatusBar(stockService);
   profitBar = new ProfitStatusBar();
 
   // create fund & stock side views
-  fundTreeView = window.createTreeView('leekFundView.fund', {
-    treeDataProvider: nodeFundProvider,
-  });
+  // fundTreeView = window.createTreeView('leekFundView.fund', {
+  //   treeDataProvider: nodeFundProvider,
+  // });
 
   stockTreeView = window.createTreeView('leekFundView.stock', {
     treeDataProvider: nodeStockProvider,
   });
 
-  binanceTreeView = window.createTreeView('leekFundView.binance', {
-    treeDataProvider: binanceProvider,
-  });
+  // binanceTreeView = window.createTreeView('leekFundView.binance', {
+  //   treeDataProvider: binanceProvider,
+  // });
 
-  forexTreeView = window.createTreeView('leekFundView.forex', {
-    treeDataProvider: forexProvider,
-  });
+  // forexTreeView = window.createTreeView('leekFundView.forex', {
+  //   treeDataProvider: forexProvider,
+  // });
 
-  window.createTreeView('leekFundView.news', {
-    treeDataProvider: newsProvider,
-  });
+  // window.createTreeView('leekFundView.news', {
+  //   treeDataProvider: newsProvider,
+  // });
 
   // fix when TreeView collapse https://github.com/giscafer/leek-fund/issues/31
   const manualRequest = () => {
-    const fundLists = LeekFundConfig.getConfig('leek-fund.funds') || [];
-    fundLists.forEach((value: Array<string>, index: number) => {
-      fundService.getData(value, SortType.NORMAL, `fundGroup_${index}`);
-    });
+    // const fundLists = LeekFundConfig.getConfig('leek-fund.funds') || [];
+    // fundLists.forEach((value: Array<string>, index: number) => {
+    //   fundService.getData(value, SortType.NORMAL, `fundGroup_${index}`);
+    // });
 
     stockService.getData(LeekFundConfig.getConfig('leek-fund.stocks'), SortType.NORMAL);
   };
@@ -135,7 +135,7 @@ export async function activate(context: ExtensionContext) {
       }
       if (stockTreeView?.visible || fundTreeView?.visible) {
         nodeStockProvider.refresh();
-        nodeFundProvider.refresh();
+        // nodeFundProvider.refresh();
         // statusBar.refresh();
       } else {
         manualRequest();
@@ -170,7 +170,7 @@ export async function activate(context: ExtensionContext) {
     binanceLoopTimer = setInterval(
       () => {
         if (binanceTreeView?.visible) {
-          binanceProvider.refresh();
+          // binanceProvider.refresh();
         }
       },
       // intervalTimeConfig < 3000 ? 3000 : intervalTimeConfig
@@ -184,7 +184,7 @@ export async function activate(context: ExtensionContext) {
     }
     forexLoopTimer = setInterval(() => {
       if (forexTreeView?.visible) {
-        forexProvider.refresh();
+        // forexProvider.refresh();
       }
     }, 120000);
   };
@@ -198,11 +198,11 @@ export async function activate(context: ExtensionContext) {
     setIntervalTime();
     setGlobalVariable();
     statusBar.refresh();
-    nodeFundProvider.refresh();
+    // nodeFundProvider.refresh();
     nodeStockProvider.refresh();
-    newsProvider.refresh();
-    binanceProvider.refresh();
-    forexProvider.refresh();
+    // newsProvider.refresh();
+    // binanceProvider.refresh();
+    // forexProvider.refresh();
     flashNewsOutputServer?.reload();
     events.emit('onDidChangeConfiguration');
     profitBar?.reload();
@@ -211,14 +211,14 @@ export async function activate(context: ExtensionContext) {
   // register event
   registerViewEvent(
     context,
-    fundService,
+    // fundService,
     stockService,
-    nodeFundProvider,
+    // nodeFundProvider,
     nodeStockProvider,
-    newsProvider,
+    // newsProvider,
     flashNewsOutputServer,
-    binanceProvider,
-    forexProvider
+    // binanceProvider,
+    // forexProvider
   );
 
   // register command

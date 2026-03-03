@@ -56,14 +56,14 @@ import { AiConfigView } from './webview/ai-config';
 
 export function registerViewEvent(
   context: ExtensionContext,
-  fundService: FundService,
+  // fundService: FundService,
   stockService: StockService,
-  fundProvider: FundProvider,
+  // fundProvider: FundProvider,
   stockProvider: StockProvider,
-  newsProvider: NewsProvider,
+  // newsProvider: NewsProvider,
   flashNewsOutputServer: FlashNewsOutputServer,
-  binanceProvider: BinanceProvider,
-  forexProvider: ForexProvider
+  // binanceProvider: BinanceProvider,
+  // forexProvider: ForexProvider
 ) {
   const newsService = new NewsService();
   const binanceService = new BinanceService(context);
@@ -79,7 +79,7 @@ export function registerViewEvent(
 
   context.subscriptions.push(
     commands.registerCommand('leek-fund.refreshFollow', () => {
-      newsProvider.refresh();
+      // newsProvider.refresh();
       window.showInformationMessage(`刷新成功`);
     })
   );
@@ -95,7 +95,7 @@ export function registerViewEvent(
     commands.registerCommand('leek-fund.refreshFund', () => {
       globalState.fundGroups = LeekFundConfig.getConfig('leek-fund.fundGroups', []);
       globalState.fundLists = LeekFundConfig.getConfig('leek-fund.funds', []);
-      fundProvider.refresh();
+      // fundProvider.refresh();
       const handler = window.setStatusBarMessage(`基金数据已刷新`);
       setTimeout(() => {
         handler.dispose();
@@ -105,8 +105,8 @@ export function registerViewEvent(
   context.subscriptions.push(
     commands.registerCommand('leek-fund.deleteFund', (target) => {
       LeekFundConfig.removeFundCfg(target.id, () => {
-        fundService.fundList = [];
-        fundProvider.refresh();
+        // fundService.fundList = [];
+        // fundProvider.refresh();
       });
     })
   );
@@ -123,7 +123,7 @@ export function registerViewEvent(
           return;
         }
         LeekFundConfig.addFundCfg(target.id, code.split('|')[0], () => {
-          fundProvider.refresh();
+          // fundProvider.refresh();
         });
       });
     })
@@ -135,7 +135,7 @@ export function registerViewEvent(
           return;
         }
         LeekFundConfig.addFundGroupCfg(name, () => {
-          fundProvider.refresh();
+          // fundProvider.refresh();
         });
       });
     })
@@ -143,8 +143,8 @@ export function registerViewEvent(
   context.subscriptions.push(
     commands.registerCommand('leek-fund.removeFundGroup', (target) => {
       LeekFundConfig.removeFundGroupCfg(target.id, () => {
-        fundService.fundList = [];
-        fundProvider.refresh();
+        // fundService.fundList = [];
+        // fundProvider.refresh();
       });
     })
   );
@@ -155,21 +155,21 @@ export function registerViewEvent(
           return;
         }
         LeekFundConfig.renameFundGroupCfg(target.id, name, () => {
-          fundProvider.refresh();
+          // fundProvider.refresh();
         });
       });
     })
   );
   context.subscriptions.push(
     commands.registerCommand('leek-fund.sortFund', () => {
-      fundProvider.changeOrder();
-      fundProvider.refresh();
+      // fundProvider.changeOrder();
+      // fundProvider.refresh();
     })
   );
   context.subscriptions.push(
     commands.registerCommand('leek-fund.sortAmountFund', () => {
-      fundProvider.changeAmountOrder();
-      fundProvider.refresh();
+      // fundProvider.changeAmountOrder();
+      // fundProvider.refresh();
     })
   );
 
@@ -199,11 +199,11 @@ export function registerViewEvent(
   );
   context.subscriptions.push(
     commands.registerCommand('leek-fund.leekCenterView', () => {
-      if (stockService.stockList.length === 0 && fundService.fundList.length === 0) {
+      if (stockService.stockList.length === 0) {
         window.showWarningMessage('数据刷新中，请稍候！');
         return;
       }
-      leekCenterView(stockService, fundService);
+      leekCenterView(stockService);
     })
   );
   context.subscriptions.push(
@@ -280,7 +280,7 @@ export function registerViewEvent(
   );
   // 基金走势图
   context.subscriptions.push(
-    commands.registerCommand('leek-fund.viewFundTrend', () => allFundTrend(fundService))
+    // commands.registerCommand('leek-fund.viewFundTrend', () => allFundTrend(fundService))
   );
   // 资金流向
   context.subscriptions.push(
@@ -293,7 +293,7 @@ export function registerViewEvent(
   context.subscriptions.push(
     commands.registerCommand('leek-fund.setFundTop', (target) => {
       LeekFundConfig.setFundTopCfg(target.id, () => {
-        fundProvider.refresh();
+        // fundProvider.refresh();
       });
     })
   );
@@ -301,7 +301,7 @@ export function registerViewEvent(
   context.subscriptions.push(
     commands.registerCommand('leek-fund.setStockTop', (target) => {
       LeekFundConfig.setStockTopCfg(target.id, () => {
-        fundProvider.refresh();
+        // fundProvider.refresh();
       });
     })
   );
@@ -309,7 +309,7 @@ export function registerViewEvent(
   context.subscriptions.push(
     commands.registerCommand('leek-fund.setStockUp', (target) => {
       LeekFundConfig.setStockUpCfg(target.id, () => {
-        fundProvider.refresh();
+        // fundProvider.refresh();
       });
     })
   );
@@ -317,7 +317,7 @@ export function registerViewEvent(
   context.subscriptions.push(
     commands.registerCommand('leek-fund.setStockDown', (target) => {
       LeekFundConfig.setStockDownCfg(target.id, () => {
-        fundProvider.refresh();
+        // fundProvider.refresh();
       });
     })
   );
@@ -348,11 +348,11 @@ export function registerViewEvent(
   // 设置基金持仓金额
   context.subscriptions.push(
     commands.registerCommand('leek-fund.setFundAmount', () => {
-      if (fundService.fundList.length === 0) {
-        window.showWarningMessage('数据刷新中，请重试！');
-        return;
-      }
-      setAmount(fundService);
+      // if (fundService.fundList.length === 0) {
+      //   window.showWarningMessage('数据刷新中，请重试！');
+      //   return;
+      // }
+      // setAmount(fundService);
     })
   );
   // 设置股票成本价
@@ -406,7 +406,7 @@ export function registerViewEvent(
             if (list.length === 1) {
               newsUserIds.push(id);
               LeekFundConfig.setConfig('leek-fund.newsUserIds', newsUserIds).then(() => {
-                newsProvider.refresh();
+                // newsProvider.refresh();
               });
             }
           } catch (e) {
@@ -421,7 +421,7 @@ export function registerViewEvent(
       const newsUserIds = LeekFundConfig.getConfig('leek-fund.newsUserIds') || [];
       const newIds = newsUserIds.filter((id: string) => id !== target.id);
       LeekFundConfig.setConfig('leek-fund.newsUserIds', newIds).then(() => {
-        newsProvider.refresh();
+        // newsProvider.refresh();
       });
     })
   );
@@ -439,7 +439,7 @@ export function registerViewEvent(
             return;
           }
           LeekFundConfig.setConfig('leek-fund.xueqiuCookie', cookie).then(() => {
-            newsProvider.refresh();
+            // newsProvider.refresh();
           });
         });
     })
@@ -450,7 +450,7 @@ export function registerViewEvent(
    */
   context.subscriptions.push(
     commands.registerCommand('leek-fund.refreshBinance', () => {
-      binanceProvider?.refresh();
+      // binanceProvider?.refresh();
     })
   );
 
@@ -460,7 +460,7 @@ export function registerViewEvent(
       const pairsList = await binanceService.getParis();
       window.showQuickPick(pairsList, { placeHolder: '请输入交易对' }).then((pair) => {
         if (!pair) return;
-        LeekFundConfig.updateBinanceCfg(pair, () => binanceProvider?.refresh());
+        // LeekFundConfig.updateBinanceCfg(pair, () => binanceProvider?.refresh());
       });
     })
   );
@@ -469,7 +469,7 @@ export function registerViewEvent(
   context.subscriptions.push(
     commands.registerCommand('leek-fund.deletePair', (target) => {
       LeekFundConfig.removeBinanceCfg(target.id, () => {
-        binanceProvider?.refresh();
+        // binanceProvider?.refresh();
       });
     })
   );
@@ -478,7 +478,7 @@ export function registerViewEvent(
   context.subscriptions.push(
     commands.registerCommand('leek-fund.setPairTop', (target) => {
       LeekFundConfig.setBinanceTopCfg(target.id, () => {
-        binanceProvider?.refresh();
+        // binanceProvider?.refresh(); 
       });
     })
   );
@@ -486,7 +486,7 @@ export function registerViewEvent(
   /* 排序 */
   context.subscriptions.push(
     commands.registerCommand('leek-fund.binanceSort', () => {
-      binanceProvider.changeOrder();
+      // binanceProvider.changeOrder();
     })
   );
 
@@ -500,7 +500,7 @@ export function registerViewEvent(
    */
   context.subscriptions.push(
     commands.registerCommand('leek-fund.refreshForex', () => {
-      forexProvider.refresh();
+      // forexProvider.refresh();
     })
   );
 
@@ -509,9 +509,9 @@ export function registerViewEvent(
    */
   context.subscriptions.push(
     commands.registerCommand('leek-fund.hideText', () => {
-      fundService.toggleLabel();
+      // fundService.toggleLabel();
       stockService.toggleLabel();
-      fundProvider.refresh();
+      // fundProvider.refresh();
       stockProvider.refresh();
     })
   );
